@@ -21,7 +21,7 @@ namespace Requestor
             new Thread(async () =>
             {
                 Thread.CurrentThread.IsBackground = true;
-                await ParallelRequests();
+                await ParallelBatchRequestLoop();
             }).Start();
      
             while (!(Console.KeyAvailable && Console.ReadKey(true).Key == ConsoleKey.Escape))
@@ -41,7 +41,7 @@ namespace Requestor
             }
         }
 
-        static async Task  ParallelRequests()
+        static async Task  ParallelBatchRequestLoop()
         {
             do{
                 if (RequestCount == 0) continue;
@@ -49,14 +49,15 @@ namespace Requestor
                 var requestTasks = new List<Task>();
                 for (int i = 0; i < RequestCount; i++)
                 {
-                    requestTasks.Add(DoRequestAsync());
+                    requestTasks.Add(RequestAndLogAsync());
                 }
                 await Task.WhenAll(requestTasks);
                 Console.WriteLine($"{RequestCount} requests in {sw.ElapsedMilliseconds}ms");
-                Thread.Sleep(100);
+                await Task.Delay(10);
             }while(true);
         }
-        static async Task DoRequestAsync()
+
+        static async Task RequestAndLogAsync()
         {
             var sw = Stopwatch.StartNew();
             var res = await http.GetAsync($"http://localhost:5000/{path}");
