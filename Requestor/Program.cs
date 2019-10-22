@@ -1,11 +1,9 @@
 ﻿using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Diagnostics;
+using System.Linq;
 using System.Net.Http;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace Requestor
 {
@@ -16,7 +14,7 @@ namespace Requestor
         static string path = "hello";
         static List<Thread> requestThreads = new List<Thread>();
 
-        static async Task Main(string[] args)
+        static void Main(string[] args)
         {
             if (args.Length > 0 && !string.IsNullOrEmpty(args[0])) path = args[0];
             Console.WriteLine($"Hammering endpoint {path}");
@@ -25,48 +23,29 @@ namespace Requestor
 
             while (!(Console.KeyAvailable && Console.ReadKey(true).Key == ConsoleKey.Escape))
             {
-                // do something
                 var k = Console.ReadKey();
                 if (k.Key == ConsoleKey.UpArrow)
                 {
-                    //RequestCount++;
-
-                    var t = new Thread(RequestAndLogLoopAsync);
-                    t.IsBackground = true;
-                    t.Start();
-                    requestThreads.Add(t);
+                    AddRequestThread();
                     Console.WriteLine();
-                    Console.WriteLine(requestThreads.Count);
+                    Console.WriteLine("Requests: " + requestThreads.Where(t => t.IsAlive == true).Count());
                 }
                 if (k.Key == ConsoleKey.DownArrow)
                 {
                     if (requestThreads.Count > 0)
                     {
                         //RequestCount--;
+                        requestThreads.RemoveAll(dt => dt.IsAlive == false);
+                        if (requestThreads.Count == 0) continue;
                         var t = requestThreads[0];
                         t.Interrupt();
                         requestThreads.Remove(t);
                     }
                     Console.WriteLine();
-                    Console.WriteLine(requestThreads.Count);
+                    Console.WriteLine("Requests: " + requestThreads.Where(t => t.IsAlive == true).Count());
                 }
             }
         }
-
-        //static async Task  ParallelBatchRequestLoop()
-        //{
-        //    do{
-        //        if (RequestCount == 0) continue;
-        //        var sw = Stopwatch.StartNew();
-        //        var requestTasks = new List<Task>();
-        //        for (int i = 0; i < RequestCount; i++)
-        //        {
-        //            requestTasks.Add(RequestAndLogLoopAsync());
-        //        }
-        //        await Task.WhenAny(requestTasks);
-        //        Console.WriteLine($"{RequestCount} requests in {sw.ElapsedMilliseconds}ms");
-        //    }while(true);
-        //}
 
         static void RequestAndLogLoopAsync()
         {
@@ -80,12 +59,26 @@ namespace Requestor
                     Console.Write($"{sw.ElapsedMilliseconds}, ");
                 }
             }
-            catch (ThreadInterruptedException tie) 
-            { }
-            catch(Exception ex)
+            catch (ThreadInterruptedException tie)
+            {
+                requestThreads.RemoveAll(dt => dt.IsAlive == false);
+            }
+            catch (Exception ex)
             {
                 Console.WriteLine(ex.Message + ex.StackTrace);
+                // put thread back after crash
+                AddRequestThread();
             }
+        }
+
+        private static void AddRequestThread()
+        {
+            var t = new Thread(RequestAndLogLoopAsync)
+            {
+                IsBackground = true
+            };
+            t.Start();
+            requestThreads.Add(t);
         }
     }
 }
