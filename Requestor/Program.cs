@@ -10,14 +10,13 @@ namespace Requestor
     class Program
     {
         static HttpClient http = new HttpClient();
-        //static int RequestCount = 0;
         static string path = "hello";
         static List<Thread> requestThreads = new List<Thread>();
 
         static void Main(string[] args)
         {
             if (args.Length > 0 && !string.IsNullOrEmpty(args[0])) path = args[0];
-            Console.WriteLine($"Hammering endpoint {path}");
+            Console.WriteLine($"Hammering endpoint: /{path}");
             Console.WriteLine("Press ESC to stop, up- down- keys to change request count");
             http.Timeout = TimeSpan.FromMilliseconds(2500);
 
@@ -34,7 +33,6 @@ namespace Requestor
                 {
                     if (requestThreads.Count > 0)
                     {
-                        //RequestCount--;
                         requestThreads.RemoveAll(dt => dt.IsAlive == false);
                         if (requestThreads.Count == 0) continue;
                         var t = requestThreads[0];
