@@ -16,9 +16,11 @@ namespace Requestor
         static void Main(string[] args)
         {
             if (args.Length > 0 && !string.IsNullOrEmpty(args[0])) path = args[0];
+            Console.WriteLine();
+            Console.WriteLine("--------------------------------");
             Console.WriteLine($"Hammering endpoint: /{path}");
             Console.WriteLine("Press ESC to stop, up- down- keys to change request count");
-            http.Timeout = TimeSpan.FromMilliseconds(2500);
+            http.Timeout = TimeSpan.FromMilliseconds(2700);
 
             while (!(Console.KeyAvailable && Console.ReadKey(true).Key == ConsoleKey.Escape))
             {
@@ -26,8 +28,10 @@ namespace Requestor
                 if (k.Key == ConsoleKey.UpArrow)
                 {
                     AddRequestThread();
+                    Console.ForegroundColor = ConsoleColor.Yellow;
                     Console.WriteLine();
                     Console.WriteLine("Requests: " + requestThreads.Where(t => t.IsAlive == true).Count());
+                    Console.ResetColor();
                 }
                 if (k.Key == ConsoleKey.DownArrow)
                 {
@@ -39,8 +43,10 @@ namespace Requestor
                         t.Interrupt();
                         requestThreads.Remove(t);
                     }
+                    Console.ForegroundColor = ConsoleColor.Yellow;
                     Console.WriteLine();
                     Console.WriteLine("Requests: " + requestThreads.Where(t => t.IsAlive == true).Count());
+                    Console.ResetColor();
                 }
             }
         }
@@ -63,7 +69,9 @@ namespace Requestor
             }
             catch (Exception ex)
             {
+                Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine(ex.Message + ex.StackTrace);
+                Console.ResetColor();
                 // put thread back after crash
                 AddRequestThread();
             }
