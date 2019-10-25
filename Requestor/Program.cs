@@ -63,7 +63,7 @@ namespace Requestor
                     Console.Write($"{sw.ElapsedMilliseconds}, ");
                 }
             }
-            catch (ThreadInterruptedException tie)
+            catch (ThreadInterruptedException)
             {
                 requestThreads.RemoveAll(dt => dt.IsAlive == false);
             }
