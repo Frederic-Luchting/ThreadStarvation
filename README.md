@@ -30,4 +30,4 @@ On the left side you can `dotnet run <method name>` where method name is one of 
 - hello-async-over-sync
 - hello-async
 
-![VSC](/images/VS_Code.png)
+![VSC](https://github.com/nulllogicone/ThreadStarvation/blob/master/images/VS_Code.PNG)
