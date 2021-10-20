@@ -26,9 +26,11 @@ https://www.youtube.com/watch?v=RYI0DHoIVaA
 Then you can `dotnet run` the web application in the right terminal and it shows Available threads and handled requests.
 On the left side you can `dotnet run <method name>` where method name is one of the following
 
-- hello                    good old sync
-- hello-async-over-sync    modern controller over old services
-- hello-sync-over-async    ☠ can kill the server, must close terminal
-- hello-async              scales!
+|dotnet run \<parameter> | comment|
+|---------|---|
+|hello                    | good old sync |
+|hello-async-over-sync    | modern controller over old services |
+|hello-sync-over-async    | ☠ can kill the server, must close terminal |
+|hello-async              | scales!|
 
 ![VSC](https://raw.githubusercontent.com/nulllogicone/ThreadStarvation/master/images/VS_Code.PNG)
