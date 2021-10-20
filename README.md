@@ -7,7 +7,7 @@ Simple story:
 - One project is a little Hello world web application with 4 methods
   - Good old full synchronous execution, works but not very efficient
   - Modern app with legacy services: async-over-sync, not best but works
-  - Old app code using modern apis: sync-over-async, shows dead IIS because of thread starvation
+  - Old app code using modern apis: sync-over-async, shows dead IIS (☠) because of thread starvation
   - Full async, shows unlimited web scale
 
 [Source code]  
@@ -25,9 +25,10 @@ https://www.youtube.com/watch?v=RYI0DHoIVaA
 
 Then you can `dotnet run` the web application in the right terminal and it shows Available threads and handled requests.
 On the left side you can `dotnet run <method name>` where method name is one of the following
-- hello
-- hello-sync-over-async
-- hello-async-over-sync
-- hello-async
+
+- hello                    good old sync
+- hello-async-over-sync    modern controller over old services
+- hello-sync-over-async    ☠ can kill the server, must close terminal
+- hello-async              scales!
 
 ![VSC](https://raw.githubusercontent.com/nulllogicone/ThreadStarvation/master/images/VS_Code.PNG)
