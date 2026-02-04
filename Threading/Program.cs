@@ -12,6 +12,15 @@ namespace Threading
 
         public static void Main(string[] args)
         {
+            // Set thread pool limits BEFORE starting web host
+            // Must set min threads FIRST, then max threads
+            ThreadPool.SetMinThreads(10, 100);  // Match max for immediate availability
+            var success = ThreadPool.SetMaxThreads(10, 100);
+            Console.WriteLine($"SetMaxThreads(10, 100) returned: {success}");
+            
+            ThreadPool.GetMaxThreads(out var maxWorker, out var maxIO);
+            Console.WriteLine($"Actual Max Threads: Worker={maxWorker}, IO={maxIO}");
+
             new Thread(ShowThreadStats)
             {
                 IsBackground = true
@@ -32,8 +41,6 @@ namespace Threading
 
         private static void ShowThreadStats(object obj)
         {
-            ThreadPool.SetMaxThreads(10, 100);
-
             while (true)
             {
                 ThreadPool.GetAvailableThreads(out var workerThreads, out var _);
