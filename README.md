@@ -54,7 +54,7 @@ https://www.youtube.com/watch?v=RYI0DHoIVaA
 |`dotnet run sync-over-async` | Legacy sync code calling modern async APIs | ☠️ **DANGER**: Thread pool starvation! |
 |`dotnet run full-async` | Full async/await throughout the stack | 🚀 Unlimited scalability! |
 
-> **⚠️ Warning**: The `sync-over-async` endpoint demonstrates thread pool starvation and can deadlock the server. You may need to forcefully close the terminal to recover.
+> **⚠️ Warning**: The `sync-over-async` endpoint demonstrates thread pool starvation and can deadlock the server. You may need to forcefully kill the terminal to recover. Or cold reboot of a machine.
 
 ![VSC](https://raw.githubusercontent.com/nulllogicone/ThreadStarvation/master/images/VS_Code.PNG)
 
