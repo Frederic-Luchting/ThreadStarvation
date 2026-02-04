@@ -9,6 +9,7 @@ namespace Requestor
 {
     class Program
     {
+        private const int HttpClientTimeoutMilliseconds = 2700;
         static HttpClient http = new HttpClient();
         static string path = "full-sync";
         static List<Thread> requestThreads = new List<Thread>();
@@ -20,7 +21,7 @@ namespace Requestor
             Console.WriteLine("--------------------------------");
             Console.WriteLine($"Hammering endpoint: /{path}");
             Console.WriteLine("Press ESC to stop, up- down- keys to change request count");
-            http.Timeout = TimeSpan.FromMilliseconds(2700);
+            http.Timeout = TimeSpan.FromMilliseconds(HttpClientTimeoutMilliseconds);
 
             while (!(Console.KeyAvailable && Console.ReadKey(true).Key == ConsoleKey.Escape))
             {
