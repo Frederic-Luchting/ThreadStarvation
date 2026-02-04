@@ -10,7 +10,7 @@ namespace Requestor
     class Program
     {
         static HttpClient http = new HttpClient();
-        static string path = "hello";
+        static string path = "full-sync";
         static List<Thread> requestThreads = new List<Thread>();
 
         static void Main(string[] args)
