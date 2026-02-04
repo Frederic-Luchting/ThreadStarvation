@@ -1,8 +1,8 @@
 # Thread starvation - async/await
 
-This repository comes from a good presentation of Damian Edwards and David Fowler (two awesome guys from the .Net Core team) about Diagnosing issues in your code.
+This repository comes from a great presentation of Damian Edwards and David Fowler (two awesome guys from the .Net Core team) about Diagnosing race issues in your code.
 
-It's a little bit outdated (2018) but aged very well. For latest updates see bottom 
+It's a little bit outdated (2018) but aged very well. For latest updates see bottom.
 
 ## Project Structure
 
@@ -14,7 +14,7 @@ ThreadStarvation/
 └── Logging/            # Logging utilities
 ```
 
-## The Two Projects
+## Two Projects
 
 - **[Threading](Threading/readme.md)** - A Hello World web application with 4 methods demonstrating different async patterns:
   - Good old full synchronous execution, works but not very efficient
@@ -25,11 +25,8 @@ ThreadStarvation/
 
 ## Original Source
 
-[Source code]  
-https://github.com/davidfowl/NdcLondon2018
-
-[Youtube]
-https://www.youtube.com/watch?v=RYI0DHoIVaA
+[Source code] https://github.com/davidfowl/NdcLondon2018  
+[Youtube] https://www.youtube.com/watch?v=RYI0DHoIVaA
 
 ## How to Use It
 
@@ -73,3 +70,4 @@ This demo clearly shows the performance impact of different async patterns and w
 - Bump to dotnet 10.0
 - Fix MaxThread setting
 - Add copilot chat summary to memory markdown (!!!)
+- Also runs in GitHub Codespaces (!!!)

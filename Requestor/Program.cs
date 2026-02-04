@@ -30,7 +30,7 @@ namespace Requestor
                     AddRequestThread();
                     Console.ForegroundColor = ConsoleColor.Yellow;
                     Console.WriteLine();
-                    Console.WriteLine("Requests: " + requestThreads.Where(t => t.IsAlive == true).Count());
+                    Console.WriteLine("Requests: " + requestThreads.Count(t => t.IsAlive == true));
                     Console.ResetColor();
                 }
                 if (k.Key == ConsoleKey.DownArrow)
