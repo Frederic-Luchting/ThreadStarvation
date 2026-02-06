@@ -43,6 +43,7 @@ public class Program
         app.Run();
     }
 
+    // Background thread method to display thread pool stats
     private static void ShowThreadStats(object obj)
     {
         while (true)

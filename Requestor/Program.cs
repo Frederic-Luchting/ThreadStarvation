@@ -17,6 +17,8 @@ class Program
 
     static void Main(string[] args)
     {
+        // set the path from command arguments, dotnet run <path>
+        // possible values: full-sync (default), async-over-sync, sync-over-async, full-async
         if (args.Length > 0 && !string.IsNullOrEmpty(args[0])) path = args[0];
         Console.WriteLine();
         Console.WriteLine("--------------------------------");

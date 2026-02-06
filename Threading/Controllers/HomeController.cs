@@ -6,7 +6,7 @@ namespace Threading.Controllers
 {
     public class HomeController : Controller
     {
-        private const int SleepOrDoNothingMilliseconds = 2000; // DB query, REST call,
+        private const int SleepOrDoNothingMilliseconds = 2000; // DB query, REST call, disk
 
         [HttpGet("/full-sync")] // Good old sync code throughout the stack
         public string FullSync()
