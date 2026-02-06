@@ -8,21 +8,21 @@ namespace Threading.Controllers
     {
         private const int SleepOrDoNothingMilliseconds = 2000; // DB query, REST call,
 
-        [HttpGet("/full-sync")] // Good old sync code 
+        [HttpGet("/full-sync")] // Good old sync code throughout the stack
         public string FullSync()
         {
             Thread.Sleep(SleepOrDoNothingMilliseconds); 
             return "Hello World";
         }
 
-        [HttpGet("/async-over-sync")] // Modern async controller calling legacy sync services
+        [HttpGet("/async-over-sync")] // Modern async controller - calling legacy sync services
         public async Task<string> AsyncOverSync()
         {
             await Task.Run(() => Thread.Sleep(SleepOrDoNothingMilliseconds));
             return "Hello World";
         }
 
-        [HttpGet("/sync-over-async")] // Legacy sync code calling modern async APIs ☠️ DANGER!
+        [HttpGet("/sync-over-async")] // Legacy sync controller - calling modern async services ☠️ DANGER!
         public string SyncOverAsync()
         {
             Task.Delay(SleepOrDoNothingMilliseconds).Wait();
