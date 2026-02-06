@@ -6,31 +6,31 @@ namespace Threading.Controllers
 {
     public class HomeController : Controller
     {
-        private const int SleepOrDoNothingMilliseconds = 2000;
+        private const int SleepOrDoNothingMilliseconds = 2000; // DB query, REST call,
 
-        [HttpGet("/full-sync")] // Good old sync code like in admin and apis
-        public string Hello()
+        [HttpGet("/full-sync")] // Good old sync code 
+        public string FullSync()
         {
-            Thread.Sleep(SleepOrDoNothingMilliseconds); // DB query, REST call,
+            Thread.Sleep(SleepOrDoNothingMilliseconds); 
             return "Hello World";
         }
 
-        [HttpGet("/async-over-sync")] // New project using old services
-        public async Task<string> HelloAsyncOverSync()
+        [HttpGet("/async-over-sync")] // Modern async controller calling legacy sync services
+        public async Task<string> AsyncOverSync()
         {
             await Task.Run(() => Thread.Sleep(SleepOrDoNothingMilliseconds));
             return "Hello World";
         }
 
-        [HttpGet("/sync-over-async")] // Old code using new APIs
-        public string HelloSyncOverAsync()
+        [HttpGet("/sync-over-async")] // Legacy sync code calling modern async APIs ☠️ DANGER!
+        public string SyncOverAsync()
         {
             Task.Delay(SleepOrDoNothingMilliseconds).Wait();
             return "Hello World";
         }
 
-        [HttpGet("/full-async")] // All new
-        public async Task<string> HelloAsync()
+        [HttpGet("/full-async")] // Full async/await throughout the stack
+        public async Task<string> FullAsync()
         {
             await Task.Delay(SleepOrDoNothingMilliseconds);
             return "Hello World";

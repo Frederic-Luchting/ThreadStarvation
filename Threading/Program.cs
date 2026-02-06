@@ -1,56 +1,59 @@
 ﻿using System;
 using System.Threading;
-using Microsoft.AspNetCore;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
-namespace Threading
+namespace Threading;
+
+public class Program
 {
-    public class Program
+    static int Requests;
+
+    public static void Main(string[] args)
     {
-        public static int Requests;
+        // Set thread pool limits BEFORE starting web host
+        // Must set min threads FIRST, then max threads
+        ThreadPool.SetMinThreads(10, 100);  
+        ThreadPool.SetMaxThreads(10, 100);
 
-        public static void Main(string[] args)
+        // Background thread to show thread pool stats every second
+        new Thread(ShowThreadStats)
         {
-            // Set thread pool limits BEFORE starting web host
-            // Must set min threads FIRST, then max threads
-            ThreadPool.SetMinThreads(10, 100);  // Match max for immediate availability
-            var success = ThreadPool.SetMaxThreads(10, 100);
-            Console.WriteLine($"SetMaxThreads(10, 100) returned: {success}");
-            
-            ThreadPool.GetMaxThreads(out var maxWorker, out var maxIO);
-            Console.WriteLine($"Actual Max Threads: Worker={maxWorker}, IO={maxIO}");
+            IsBackground = true
+        }.Start();
 
-            new Thread(ShowThreadStats)
-            {
-                IsBackground = true
-            }.Start();
+        // Build and run the web API host
+        var builder = WebApplication.CreateBuilder(args);
+        builder.Logging.SetMinimumLevel(LogLevel.Critical);
+        builder.Services.AddMvc(opt => opt.EnableEndpointRouting = false);
+        builder.WebHost.UseUrls("http://*:5000");
+        var app = builder.Build();
 
-            BuildWebHost(args).Run();
-        }
-
-        public static IWebHost BuildWebHost(string[] args) =>
-            WebHost.CreateDefaultBuilder(args)
-                .UseStartup<Startup>()
-                .UseUrls("http://*:5000")
-                .ConfigureLogging(logging =>
-                {
-                    logging.SetMinimumLevel(LogLevel.Critical);
-                })
-                .Build();
-
-        private static void ShowThreadStats(object obj)
+        // Middleware to track active requests
+        app.Use(async (context, next) =>
         {
-            while (true)
-            {
-                ThreadPool.GetAvailableThreads(out var workerThreads, out var _);
-                ThreadPool.GetMinThreads(out var minThreads, out var _);
-                ThreadPool.GetMaxThreads(out var maxThreads, out var _);
+            Interlocked.Increment(ref Requests);
+            await next();
+            Interlocked.Decrement(ref Requests);
+        });
 
-                Console.WriteLine($"Avail: {workerThreads}, Active: {maxThreads - workerThreads}, Min: {minThreads}, Max: {maxThreads}, Req: {Requests}");
+        app.UseMvc();
+        app.Run();
+    }
 
-                Thread.Sleep(1000);
-            }
+    private static void ShowThreadStats(object obj)
+    {
+        while (true)
+        {
+            ThreadPool.GetAvailableThreads(out var workerThreads, out var _);
+            ThreadPool.GetMinThreads(out var minThreads, out var _);
+            ThreadPool.GetMaxThreads(out var maxThreads, out var _);
+
+            Console.WriteLine($"Avail: {workerThreads}, Active: {maxThreads - workerThreads}, Min: {minThreads}, Max: {maxThreads}, Req: {Requests}");
+
+            Thread.Sleep(1000);
         }
     }
 }
