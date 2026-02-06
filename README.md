@@ -10,8 +10,6 @@ It's a little bit outdated (2018) but aged very well. For latest updates see bot
 ThreadStarvation/
 ├── Threading/          # Backend web server with test endpoints
 ├── Requestor/          # Load testing client tool
-├── Talk1Samples/       # Original NDC London 2018 samples
-└── Logging/            # Logging utilities
 ```
 
 ## Two Projects
@@ -68,6 +66,6 @@ This demo clearly shows the performance impact of different async patterns and w
 ## Latest updates (2026)
 
 - Bump to dotnet 10.0
-- Fix MaxThread setting
+- Fix MaxThread setting for modern machines
 - Add copilot chat summary to memory markdown (!!!)
 - Also runs in GitHub Codespaces (!!!)
