@@ -67,5 +67,17 @@ This demo clearly shows the performance impact of different async patterns and w
 
 - Bump to dotnet 10.0
 - Fix MaxThread setting for modern machines
-- Add copilot chat summary to memory markdown (!!!)
-- Also runs in GitHub Codespaces (!!!)
+- Add copilot chat summary to memory markdown (???)
+- Also runs in GitHub Codespaces and Devcontainers (!!!)
+
+## Diagrams
+See [Threading Patterns Comparison](./mermaid.md) for detailed flowcharts and a quick comparison table of each async/await pattern.  
+All mermaid code is copilot generated, but I reviewed manually, and it looks perfect.
+
+- Full-Sync (Thread.Sleep)
+- Async-Over-Sync (Task.Run + Thread.Sleep)
+- Sync-Over-Async (Task.Delay().Wait())
+- Full-Async (await Task.Delay)
+
+These diagrams visually explain thread usage, scalability, and the risks of thread starvation.
+
