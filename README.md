@@ -1,16 +1,12 @@
 # Thread starvation - async/await
 
-This repository comes from a great presentation of Damian Edwards and David Fowler (two awesome guys from the .Net Core team) about Diagnosing race issues in your code.
+This repository was inspired by a great presentation from Damian Edwards and David Fowler 2018, really great! 
+- [Youtube] https://www.youtube.com/watch?v=RYI0DHoIVaA  
+- [Source code] https://github.com/davidfowl/NdcLondon2018  
 
-It's a little bit outdated (2018) but aged very well. For latest updates see bottom.
+It's a little bit outdated, but aged very well.  
 
-## Project Structure
-
-```
-ThreadStarvation/
-├── Threading/          # Backend web server with test endpoints
-├── Requestor/          # Load testing client tool
-```
+For [Latest updates](#latest-updates-2026) see below.  
 
 ## Two Projects
 
@@ -20,11 +16,6 @@ ThreadStarvation/
   - Old app code using modern APIs: sync-over-async, shows dead IIS (☠) because of thread starvation
   - Full async, shows unlimited web scale
 - **[Requestor](Requestor/readme.md)** - Load testing tool that hammers the Threading endpoints. You can arrow up/down to scale parallel requests
-
-## Original Source
-
-[Source code] https://github.com/davidfowl/NdcLondon2018  
-[Youtube] https://www.youtube.com/watch?v=RYI0DHoIVaA
 
 ## How to Use It
 
@@ -63,6 +54,22 @@ ThreadStarvation/
 
 This demo clearly shows the performance impact of different async patterns and why proper async/await usage is critical for scalable web applications.
 
+## Source Code
+
+The full source code is on GitHub:  
+https://github.com/nulllogicone/ThreadStarvation/blob/main/Threading/Controllers/HomeController.cs
+
+One example of **golden standard**
+
+```csharp
+        [HttpGet("/full-async")] // Full async/await throughout the stack
+        public async Task<string> FullAsync()
+        {
+            await Task.Delay(SleepOrDoNothingMilliseconds);
+            return "Hello World";
+        }
+```
+
 ## Latest updates (2026)
 
 - Bump to dotnet 10.0
@@ -81,3 +88,26 @@ All mermaid code is copilot generated, but I reviewed manually, and it looks per
 
 These diagrams visually explain thread usage, scalability, and the risks of thread starvation.
 
+## One example #3: Sync-Over-Async Pattern ☠️
+
+Legacy sync code calling modern async APIs - `Task.Delay().Wait()`
+
+```mermaid
+flowchart LR
+    A[Request Arrives] --> B[Sync Method]
+    B --> C[Task.Delay 2s]
+    C --> D[.Wait blocks thread<br/>🔴 BLOCKED]
+    D --> E[Continuation needs<br/>ANOTHER thread]
+    E --> F[💀 STARVATION]
+```
+
+**Result**: ☠️ **DANGER** - Thread pool exhaustion! Original thread blocked waiting, continuation needs another thread to resume. With limited threads, all get blocked waiting for each other = deadlock.
+
+---
+
+## ChatGpt
+
+I asked ChatGpt before to create the mermaid diagrams but was all crap, copilot could fix it.  
+But I also asked ChatGpt to create a 4 slide comic strip just based on this readme and source code.  
+
+![comic](./images/ChatGPT-4-cartoon.png)
