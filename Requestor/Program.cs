@@ -12,7 +12,7 @@ class Program
     private const int HttpClientTimeoutMilliseconds = 2700; 
     static string path = "full-sync";
 
-    static readonly HttpClient http = new ();
+    static readonly HttpClient http = new HttpClient(); // Another anti-pattern that could cause socket exhaustion. Here it's fine, but in production consider using IHttpClientFactory or similar pattern.
     static readonly List<Thread> requestThreads = [];
 
     static void Main(string[] args)
