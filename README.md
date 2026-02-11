@@ -1,19 +1,18 @@
-# Thread starvation - async/await
+# Thread Starvation - async/await 
 
 This repository was inspired by a great presentation from Damian Edwards and David Fowler 2018, really great! 
 - [Youtube] https://www.youtube.com/watch?v=RYI0DHoIVaA  
 - [Source code] https://github.com/davidfowl/NdcLondon2018  
 
-It's a little bit outdated, but aged very well.  
-
-For [Latest updates](#latest-updates-2026) see below.  
+A little bit outdated, but aged very well.  
+For [Latest updates](#latest-updates-2026), scroll down to bottom.  
 
 ## Two Projects
 
-- **[Threading](Threading/readme.md)** - A Hello World web application with 4 methods demonstrating different async patterns:
-  - Good old full synchronous execution, works but not very efficient
-  - Modern app with legacy services: async-over-sync, not best but works
-  - Old app code using modern APIs: sync-over-async, shows dead IIS (☠) because of thread starvation
+- **[Threading](Threading/readme.md)** - A Hello World **Web API** with 4 endpoints demonstrating different async patterns:
+  - Good old full synchronous execution: full-sync
+  - Modern app with legacy services: async-over-sync, 
+  - Old app code using modern APIs: sync-over-async - kills IIS ☠
   - Full async, shows unlimited web scale
 - **[Requestor](Requestor/readme.md)** - Load testing tool that hammers the Threading endpoints. You can arrow up/down to scale parallel requests
 
@@ -54,41 +53,20 @@ For [Latest updates](#latest-updates-2026) see below.
 
 This demo clearly shows the performance impact of different async patterns and why proper async/await usage is critical for scalable web applications.
 
-## Source Code
-
-The full source code is on GitHub:  
-https://github.com/nulllogicone/ThreadStarvation/blob/main/Threading/Controllers/HomeController.cs
-
-One example of **golden standard**
-
-```csharp
-        [HttpGet("/full-async")] // Full async/await throughout the stack
-        public async Task<string> FullAsync()
-        {
-            await Task.Delay(SleepOrDoNothingMilliseconds);
-            return "Hello World";
-        }
-```
 
 ## Latest updates (2026)
 
 - Bump to dotnet 10.0
 - Fix MaxThread setting for modern machines
-- Add copilot chat summary to memory markdown (???)
 - Also runs in GitHub Codespaces and Devcontainers (!!!)
+- Generate diagram and comic strip with AI
 
-## Diagrams
-See [Threading Patterns Comparison](./mermaid.md) for detailed flowcharts and a quick comparison table of each async/await pattern.  
-All mermaid code is copilot generated, but I reviewed manually, and it looks perfect.
-
-- Full-Sync (Thread.Sleep)
-- Async-Over-Sync (Task.Run + Thread.Sleep)
-- Sync-Over-Async (Task.Delay().Wait())
-- Full-Async (await Task.Delay)
-
+### Diagrams
+See [Threading Patterns Comparison](./threading-diagrams.md) for detailed flowcharts and a quick comparison  of each async/await pattern.  
+All mermaid code is copilot generated, but I reviewed it manually, and looks perfect.  
 These diagrams visually explain thread usage, scalability, and the risks of thread starvation.
 
-## One example #3: Sync-Over-Async Pattern ☠️
+#### One example #3: Sync-Over-Async Pattern ☠️
 
 Legacy sync code calling modern async APIs - `Task.Delay().Wait()`
 
@@ -105,9 +83,9 @@ flowchart LR
 
 ---
 
-## ChatGpt
+## ChatGpt for cartoons, story telling, ...
 
 I asked ChatGpt before to create the mermaid diagrams but was all crap, copilot could fix it.  
-But I also asked ChatGpt to create a 4 slide comic strip just based on this readme and source code.  
+But I also asked ChatGpt to create a comic strip. All just based on one-shot prompt and readme and source code.  
 
 ![comic](./images/ChatGPT-4-cartoon.png)
