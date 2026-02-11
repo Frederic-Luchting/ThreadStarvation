@@ -13,13 +13,15 @@ The presentation explains the Thread Starvation demo in business-friendly terms,
 
 ## 🚀 How to View
 
-### Option 1: Open Locally
-Simply open `index.html` in any modern web browser:
+**Recommended: Use `slides.html`** - This is the self-contained presentation that works offline.
+
+### Option 1: Open Locally (Recommended)
+Simply open `slides.html` in any modern web browser:
 ```bash
 # From the presentation directory
-open index.html         # macOS
-xdg-open index.html     # Linux
-start index.html        # Windows
+open slides.html         # macOS
+xdg-open slides.html     # Linux
+start slides.html        # Windows
 ```
 
 ### Option 2: Local Web Server
@@ -31,12 +33,15 @@ python -m http.server 8000
 # Using Node.js (with npx)
 npx http-server
 
-# Then open: http://localhost:8000
+# Then open: http://localhost:8000/slides.html
 ```
 
 ### Option 3: GitHub Pages
 If this repository has GitHub Pages enabled, the presentation will be available at:
-`https://[username].github.io/ThreadStarvation/presentation/`
+`https://[username].github.io/ThreadStarvation/presentation/slides.html`
+
+### Alternative: Reveal.js Version
+There's also an `index.html` file that uses the Reveal.js framework (requires internet connection for CDN resources). Use `slides.html` for a fully self-contained experience.
 
 ## 📖 Navigation
 
@@ -74,7 +79,16 @@ If this repository has GitHub Pages enabled, the presentation will be available 
 
 ## 🔧 Customization
 
-The presentation uses Reveal.js CDN links, so no installation is needed. To customize:
+### For slides.html (Self-contained):
+The presentation uses pure HTML/CSS/JS with no external dependencies. To customize:
+
+1. **Colors**: Edit the `<style>` section in the HTML
+2. **Content**: Edit slide content directly in the HTML  
+3. **Gradient Background**: Modify the `background` property in the `body` CSS
+4. **Pattern Colors**: Change `.pattern-good`, `.pattern-warning`, `.pattern-danger` classes
+
+### For index.html (Reveal.js):
+This version uses Reveal.js from CDN. To customize:
 
 1. **Theme**: Change the CSS theme link in the HTML
 2. **Colors**: Edit the `<style>` section in the HTML
@@ -83,6 +97,15 @@ The presentation uses Reveal.js CDN links, so no installation is needed. To cust
 
 ## 📝 Technical Details
 
+### slides.html (Recommended)
+- **Framework**: Pure HTML/CSS/JavaScript (no dependencies)
+- **Format**: Single self-contained HTML file
+- **Dependencies**: None - works completely offline
+- **Browser Support**: All modern browsers (Chrome, Firefox, Safari, Edge)
+- **File Size**: ~24KB
+- **Navigation**: Keyboard arrows, space, Home/End keys + on-screen buttons
+
+### index.html (Alternative)
 - **Framework**: Reveal.js 4.5.0
 - **Theme**: Black theme (can be changed)
 - **Format**: Single HTML file with embedded styles
