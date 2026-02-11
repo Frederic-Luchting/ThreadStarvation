@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thread Starvation: A Business Guide</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/reveal.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/theme/black.min.css">
+    <style>
+        .reveal h1, .reveal h2, .reveal h3 {
+            text-transform: none;
+        }
+        .reveal section img {
+            border: none;
+            box-shadow: none;
+            background: none;
+        }
+        .pattern-good {
+            color: #4caf50;
+            font-weight: bold;
+        }
+        .pattern-warning {
+            color: #ff9800;
+            font-weight: bold;
+        }
+        .pattern-danger {
+            color: #f44336;
+            font-weight: bold;
+        }
+        .emoji-large {
+            font-size: 2em;
+        }
+        .business-impact {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+        .comparison-table {
+            font-size: 0.8em;
+        }
+        .comparison-table td {
+            padding: 10px;
+        }
+        code {
+            color: #e91e63;
+        }
+        .mermaid {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="reveal">
+        <div class="slides">
+            
+            <!-- Slide 1: Title -->
+            <section>
+                <h1>Thread Starvation</h1>
+                <h3>Understanding Performance Bottlenecks in Modern Applications</h3>
+                <p>A Guide for Business and Technical Teams</p>
+            </section>
+
+            <!-- Slide 2: What is Thread Starvation? -->
+            <section>
+                <h2>What is Thread Starvation? 🤔</h2>
+                <div style="text-align: left; margin: 40px;">
+                    <p><strong>In Simple Terms:</strong></p>
+                    <p>Imagine a restaurant with only 10 waiters. If all waiters stand waiting at the kitchen door instead of taking new orders, no new customers can be served.</p>
+                    <br>
+                    <p><strong>In Technical Terms:</strong></p>
+                    <p>When all available threads are blocked waiting for operations to complete, the application cannot process new requests.</p>
+                </div>
+            </section>
+
+            <!-- Slide 3: Business Impact -->
+            <section>
+                <h2>Why Should Business Care? 💼</h2>
+                <div class="business-impact">
+                    <h3>Real Business Consequences:</h3>
+                    <ul>
+                        <li>🐌 <strong>Slow Response Times</strong> - Customers wait longer</li>
+                        <li>💥 <strong>Application Crashes</strong> - System becomes unresponsive</li>
+                        <li>💰 <strong>Lost Revenue</strong> - Users abandon slow applications</li>
+                        <li>😡 <strong>Poor User Experience</strong> - Frustrated customers</li>
+                        <li>📉 <strong>Reduced Capacity</strong> - Server handles fewer users</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Slide 4: The Restaurant Analogy -->
+            <section>
+                <h2>The Restaurant Analogy 🍽️</h2>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; text-align: left;">
+                    <div>
+                        <h3>❌ Bad Pattern</h3>
+                        <p><strong>Blocking Waiter:</strong></p>
+                        <ul style="font-size: 0.8em;">
+                            <li>Waiter takes order</li>
+                            <li>Waiter stands at kitchen door waiting</li>
+                            <li>Waiter can't serve other customers</li>
+                            <li>Restaurant gets backed up</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3>✅ Good Pattern</h3>
+                        <p><strong>Efficient Waiter:</strong></p>
+                        <ul style="font-size: 0.8em;">
+                            <li>Waiter takes order</li>
+                            <li>Waiter gives order to kitchen</li>
+                            <li>Waiter serves other customers</li>
+                            <li>Kitchen signals when ready</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Slide 5: Pattern 1 - Full Sync -->
+            <section>
+                <h2>Pattern 1: Full Synchronous <span class="pattern-warning">⚠️</span></h2>
+                <h3>The Traditional Approach</h3>
+                <div style="text-align: left; margin: 40px;">
+                    <p><strong>What happens:</strong></p>
+                    <ul>
+                        <li>Thread handles request from start to finish</li>
+                        <li>Thread is blocked during entire operation</li>
+                        <li>Simple and predictable</li>
+                    </ul>
+                    <br>
+                    <p><strong>Business Impact:</strong></p>
+                    <ul>
+                        <li class="pattern-warning">Limited scalability - can handle ~100 concurrent users</li>
+                        <li>Works fine for small applications</li>
+                        <li>May require more servers for high traffic</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Slide 6: Pattern 2 - Async over Sync -->
+            <section>
+                <h2>Pattern 2: Async-over-Sync <span class="pattern-warning">⚠️</span></h2>
+                <h3>Modern App, Legacy Services</h3>
+                <div style="text-align: left; margin: 40px;">
+                    <p><strong>What happens:</strong></p>
+                    <ul>
+                        <li>Modern code calling old blocking services</li>
+                        <li>Uses workarounds to prevent blocking</li>
+                        <li>Not optimal but safe</li>
+                    </ul>
+                    <br>
+                    <p><strong>Business Impact:</strong></p>
+                    <ul>
+                        <li class="pattern-warning">Acceptable compromise during migration</li>
+                        <li>Better than Pattern 1, not as good as Pattern 4</li>
+                        <li>Allows gradual modernization</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Slide 7: Pattern 3 - Sync over Async -->
+            <section>
+                <h2>Pattern 3: Sync-over-Async <span class="pattern-danger">☠️</span></h2>
+                <h3>The Dangerous Anti-Pattern</h3>
+                <div style="text-align: left; margin: 40px;">
+                    <p><strong>What happens:</strong></p>
+                    <ul>
+                        <li>Old code trying to use modern async services</li>
+                        <li>Blocks thread while waiting for async operation</li>
+                        <li>Creates deadlock situations</li>
+                    </ul>
+                    <br>
+                    <p><strong>Business Impact:</strong></p>
+                    <ul>
+                        <li class="pattern-danger">💀 CRITICAL: Application becomes unresponsive</li>
+                        <li class="pattern-danger">Can handle only ~10 concurrent users before crashing</li>
+                        <li class="pattern-danger">May require server restart</li>
+                        <li class="pattern-danger">This pattern should be eliminated immediately!</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Slide 8: Pattern 4 - Full Async -->
+            <section>
+                <h2>Pattern 4: Full Async <span class="pattern-good">🚀</span></h2>
+                <h3>The Modern Solution</h3>
+                <div style="text-align: left; margin: 40px;">
+                    <p><strong>What happens:</strong></p>
+                    <ul>
+                        <li>Threads are released while waiting</li>
+                        <li>Can serve many more customers</li>
+                        <li>Optimal resource utilization</li>
+                    </ul>
+                    <br>
+                    <p><strong>Business Impact:</strong></p>
+                    <ul>
+                        <li class="pattern-good">✅ Unlimited scalability potential</li>
+                        <li class="pattern-good">Can handle 1000+ concurrent users on same hardware</li>
+                        <li class="pattern-good">Lower infrastructure costs</li>
+                        <li class="pattern-good">Better user experience</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Slide 9: Visual Comparison -->
+            <section>
+                <h2>Pattern Comparison</h2>
+                <table class="comparison-table" style="width: 100%; font-size: 0.7em;">
+                    <thead>
+                        <tr>
+                            <th>Pattern</th>
+                            <th>Concurrent Users</th>
+                            <th>Risk Level</th>
+                            <th>Recommendation</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Full-Sync</strong></td>
+                            <td>~100 users</td>
+                            <td><span class="pattern-warning">⚠️ Limited</span></td>
+                            <td>OK for small apps</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Async-over-Sync</strong></td>
+                            <td>~200 users</td>
+                            <td><span class="pattern-warning">⚠️ Suboptimal</span></td>
+                            <td>Temporary solution</td>
+                        </tr>
+                        <tr style="background: rgba(255, 0, 0, 0.2);">
+                            <td><strong>Sync-over-Async</strong></td>
+                            <td>~10 users</td>
+                            <td><span class="pattern-danger">☠️ CRITICAL</span></td>
+                            <td><strong>FIX IMMEDIATELY!</strong></td>
+                        </tr>
+                        <tr style="background: rgba(0, 255, 0, 0.2);">
+                            <td><strong>Full-Async</strong></td>
+                            <td>1000+ users</td>
+                            <td><span class="pattern-good">✅ Optimal</span></td>
+                            <td><strong>Target state</strong></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- Slide 10: Thread Pool Visualization -->
+            <section>
+                <h2>Thread Pool Visualization</h2>
+                <div style="text-align: left;">
+                    <h3>Bad Pattern (Sync-over-Async):</h3>
+                    <p style="font-size: 0.8em;">🔴🔴🔴🔴🔴🔴🔴🔴🔴🔴 ← All 10 threads blocked!</p>
+                    <p style="font-size: 0.7em;">❌ No threads available for new requests</p>
+                    <br>
+                    <h3>Good Pattern (Full-Async):</h3>
+                    <p style="font-size: 0.8em;">⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡ ← All threads available!</p>
+                    <p style="font-size: 0.7em;">✅ Threads released during I/O operations</p>
+                    <br>
+                    <p><strong>Result:</strong> Same hardware, 100x more capacity!</p>
+                </div>
+            </section>
+
+            <!-- Slide 11: Key Takeaways -->
+            <section>
+                <h2>Key Takeaways for Business 📊</h2>
+                <div style="text-align: left; margin: 40px;">
+                    <ol>
+                        <li><strong>Code patterns directly impact capacity</strong> - Bad patterns reduce users we can serve by 100x</li>
+                        <li><strong>Sync-over-Async is a critical bug</strong> - Must be found and fixed</li>
+                        <li><strong>Full-Async is the goal</strong> - Best performance and user experience</li>
+                        <li><strong>Migration takes time</strong> - Async-over-Sync is acceptable during transition</li>
+                        <li><strong>Prevention is key</strong> - Code reviews should catch these patterns</li>
+                    </ol>
+                </div>
+            </section>
+
+            <!-- Slide 12: Investment Perspective -->
+            <section>
+                <h2>Investment Perspective 💰</h2>
+                <div class="business-impact">
+                    <h3>Cost of Bad Patterns:</h3>
+                    <ul>
+                        <li>10x more servers needed for same capacity</li>
+                        <li>Higher cloud/hosting costs</li>
+                        <li>More downtime and incidents</li>
+                        <li>Lost customers due to poor performance</li>
+                    </ul>
+                    <br>
+                    <h3>ROI of Fixing:</h3>
+                    <ul>
+                        <li>90% reduction in infrastructure needs</li>
+                        <li>Better customer satisfaction</li>
+                        <li>Fewer production incidents</li>
+                        <li>Competitive advantage through performance</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Slide 13: Live Demo -->
+            <section>
+                <h2>Live Demo 🖥️</h2>
+                <div style="text-align: left; margin: 40px;">
+                    <p><strong>This repository includes a working demo that shows:</strong></p>
+                    <ul>
+                        <li>Real-time thread pool monitoring</li>
+                        <li>Load testing tool to stress each pattern</li>
+                        <li>Visual proof of thread starvation</li>
+                        <li>Side-by-side comparison of patterns</li>
+                    </ul>
+                    <br>
+                    <p><strong>Demo shows:</strong></p>
+                    <ul>
+                        <li>Full-Sync: Handles load, but limited</li>
+                        <li>Async-over-Sync: Works, uses more threads</li>
+                        <li>Sync-over-Async: <span class="pattern-danger">Crashes within seconds! ☠️</span></li>
+                        <li>Full-Async: Unlimited scalability! 🚀</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Slide 14: What Developers Should Do -->
+            <section>
+                <h2>Developer Action Items 👨‍💻</h2>
+                <div style="text-align: left; margin: 40px;">
+                    <h3>Immediate Actions:</h3>
+                    <ol>
+                        <li>Search codebase for <code>.Wait()</code> and <code>.Result</code> calls</li>
+                        <li>Review any synchronous methods calling async APIs</li>
+                        <li>Add thread pool monitoring to production</li>
+                    </ol>
+                    <br>
+                    <h3>Long-term Strategy:</h3>
+                    <ol>
+                        <li>Adopt async/await throughout the stack</li>
+                        <li>Update code review guidelines</li>
+                        <li>Train team on async best practices</li>
+                        <li>Add automated checks for anti-patterns</li>
+                    </ol>
+                </div>
+            </section>
+
+            <!-- Slide 15: Resources -->
+            <section>
+                <h2>Learn More 📚</h2>
+                <div style="text-align: left; margin: 40px;">
+                    <h3>This Repository:</h3>
+                    <ul>
+                        <li>Working code examples</li>
+                        <li>Load testing tools</li>
+                        <li>Detailed technical documentation</li>
+                        <li>Mermaid diagrams showing thread flow</li>
+                    </ul>
+                    <br>
+                    <h3>Original Inspiration:</h3>
+                    <ul>
+                        <li>NDC London 2018 - Damian Edwards & David Fowler</li>
+                        <li><a href="https://www.youtube.com/watch?v=RYI0DHoIVaA" target="_blank">Watch on YouTube</a></li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Slide 16: Questions -->
+            <section>
+                <h1>Questions? 🤔</h1>
+                <br>
+                <h3>Thank you for your attention!</h3>
+                <br>
+                <p>Press ESC for slide overview</p>
+                <p>Use arrow keys to navigate</p>
+            </section>
+
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/reveal.min.js"></script>
+    <script>
+        Reveal.initialize({
+            hash: true,
+            slideNumber: true,
+            transition: 'slide',
+            controls: true,
+            progress: true,
+            center: true,
+            mouseWheel: true,
+            width: 1200,
+            height: 700,
+            margin: 0.1,
+        });
+    </script>
+</body>
+</html>
