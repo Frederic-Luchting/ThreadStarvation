@@ -7,19 +7,6 @@ This repository was inspired by a great presentation from Damian Edwards and Dav
 A little bit outdated, but aged very well.  
 For [Latest updates](#latest-updates-2026), scroll down to bottom.  
 
-## 🎯 NEW: Business Presentation
-
-**[View the Online Presentation →](./presentation/slides.html)**
-
-A business-friendly slideshow explaining thread starvation concepts, patterns, and impact. Perfect for presenting to non-technical stakeholders!
-
-- 16 interactive slides with keyboard navigation
-- Business impact and ROI analysis
-- Visual comparisons and easy-to-understand analogies
-- No technical jargon required
-
-See [presentation/README.md](./presentation/README.md) for viewing instructions.
-
 ## Two Projects
 
 - **[Threading](Threading/readme.md)** - A Hello World **Web API** with 4 endpoints demonstrating different async patterns:
