@@ -86,6 +86,6 @@ flowchart LR
 ## ChatGpt comic
 
 I asked ChatGpt before to create the mermaid diagrams but was all crap, copilot could fix it.  
-But I also asked ChatGpt to create a comic strip. All just based on one-shot prompt and readme and source code.  
+But I also asked ChatGpt to create a comic strip. All just based on one-shot prompt and readme and source code.   
 
 ![comic](./images/ChatGPT-4-cartoon.png)
