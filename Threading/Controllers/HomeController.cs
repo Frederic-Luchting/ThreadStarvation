@@ -25,7 +25,7 @@ namespace Threading.Controllers
         [HttpGet("/sync-over-async")] // Legacy sync controller - calling modern async services ☠️ DANGER!
         public string SyncOverAsync()
         {
-            Task.Delay(SleepOrDoNothingMilliseconds).Wait();
+            Task.Delay(SleepOrDoNothingMilliseconds).Wait(); // Blocks the thread, can cause deadlocks and thread pool starvation
             return "Hello World";
         }
 

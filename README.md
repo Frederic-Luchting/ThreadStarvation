@@ -10,10 +10,10 @@ For [Latest updates](#latest-updates-2026), scroll down to bottom.
 ## Two Projects
 
 - **[Threading](Threading/readme.md)** - A Hello World **Web API** with 4 endpoints demonstrating different async patterns:
-  - Good old full synchronous execution: full-sync
-  - Modern app with legacy services: async-over-sync, 
-  - Old app code using modern APIs: sync-over-async - kills IIS ☠
-  - Full async, shows unlimited web scale
+  - Good old full synchronous execution: **full-sync**
+  - Modern app with legacy services: **async-over-sync**, 
+  - Old app code using modern APIs: **sync-over-async** - kills IIS ☠
+  - **Full async**, shows unlimited web scale
 - **[Requestor](Requestor/readme.md)** - Load testing tool that hammers the Threading endpoints. You can arrow up/down to scale parallel requests
 
 ## How to Use It
